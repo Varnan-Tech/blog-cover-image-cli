@@ -1,0 +1,143 @@
+#!/usr/bin/env node
+
+import { Command } from 'commander';
+import chalk from 'chalk';
+import gradient from 'gradient-string';
+import figlet from 'figlet';
+import Conf from 'conf';
+import { password } from '@inquirer/prompts';
+import { writeFile, mkdir } from 'node:fs/promises';
+import path from 'node:path';
+import { generateCoverImage } from '../src/geminiGenerator.js';
+import { fetchLogo } from '../src/logoFetcher.js';
+
+const config = new Conf({ projectName: 'blog-cover-image-cli' });
+const program = new Command();
+
+// Display banner
+console.log(
+  gradient(['#00ff00', '#00cc00', '#009900']).multiline(
+    figlet.textSync('Blog Cover CLI', { font: 'ANSI Shadow', horizontalLayout: 'full' })
+  )
+);
+
+async function getApiKey() {
+  let apiKey = config.get('GEMINI_API_KEY');
+  if (!apiKey) {
+    console.log(chalk.yellow('Gemini API Key not found.'));
+    try {
+      apiKey = await password({
+        message: 'Enter your Gemini API Key:',
+        validate: (value) => value.length > 0 || 'API Key cannot be empty',
+      });
+      config.set('GEMINI_API_KEY', apiKey);
+      console.log(chalk.green('API Key saved successfully.'));
+    } catch (error) {
+      if (error.name === 'ExitPromptError') {
+        console.log(chalk.red('\nOperation cancelled.'));
+        process.exit(0);
+      }
+      throw error;
+    }
+  }
+  return apiKey;
+}
+
+program
+  .name('blog-cover-cli')
+  .description('CLI to generate blog cover images using Gemini')
+  .version('1.0.0');
+
+const configCmd = program.command('config').description('Manage configuration');
+
+configCmd
+  .command('set-key')
+  .description('Set Gemini API Key')
+  .argument('<key>', 'Gemini API Key')
+  .action((key) => {
+    config.set('GEMINI_API_KEY', key);
+    console.log(chalk.green('Gemini API Key updated.'));
+  });
+
+configCmd
+  .command('get-key')
+  .description('Get Gemini API Key (masked)')
+  .action(() => {
+    const key = config.get('GEMINI_API_KEY');
+    if (key) {
+      const masked = key.slice(0, 4) + '*'.repeat(key.length - 8) + key.slice(-4);
+      console.log(`GEMINI_API_KEY: ${chalk.blue(masked)}`);
+    } else {
+      console.log(chalk.yellow('No API Key set.'));
+    }
+  });
+
+configCmd
+  .command('delete-key')
+  .description('Delete Gemini API Key')
+  .action(() => {
+    config.delete('GEMINI_API_KEY');
+    console.log(chalk.green('Gemini API Key deleted.'));
+  });
+
+program
+  .command('generate', { isDefault: true })
+  .description('Generate a blog cover image')
+  .option('-t, --title <title>', 'Blog post title')
+  .option('-l, --logo <logo>', 'Logo domain or URL')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (options) => {
+    try {
+      let { title, logo, output } = options;
+
+      if (!title) {
+        console.error(chalk.red('Error: Title is required. Use -t or --title.'));
+        process.exit(1);
+      }
+
+      const apiKey = await getApiKey();
+
+      console.log(chalk.blue('Fetching logo...'));
+      let logoData = null;
+      if (logo) {
+        logoData = await fetchLogo(logo);
+        if (!logoData) {
+          console.log(chalk.yellow(`Warning: Could not fetch logo for "${logo}". Proceeding without logo.`));
+        }
+      }
+
+      console.log(chalk.blue('Generating image...'));
+      const { base64Image, textOutput } = await generateCoverImage(title, logoData, apiKey);
+
+      if (!output) {
+        // Smart default filename inside an "output" directory
+        const namePart = logo ? logo.split('.')[0] : title.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 20);
+        output = path.join(process.cwd(), 'output', `${namePart}-cover.png`);
+      } else {
+        output = path.resolve(process.cwd(), output);
+      }
+
+      // Ensure directory exists
+      await mkdir(path.dirname(output), { recursive: true });
+
+      const buffer = Buffer.from(base64Image, 'base64');
+      await writeFile(output, buffer);
+
+      console.log(chalk.green(`\nSuccess! Image saved to: ${chalk.bold(output)}`));
+      if (textOutput.trim()) {
+        console.log(chalk.gray('\nGemini Output:'));
+        console.log(textOutput);
+      }
+    } catch (error) {
+      console.error(chalk.red('\nError:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Handle Ctrl+C
+process.on('SIGINT', () => {
+  console.log(chalk.red('\nProcess terminated.'));
+  process.exit(0);
+});
+
+program.parse();
