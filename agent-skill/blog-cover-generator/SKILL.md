@@ -17,17 +17,16 @@ npm install -g blog-cover-image-cli
 
 If the user wants you to generate an image and you haven't set up the API key yet, you must first configure the CLI using a Gemini API Key. The CLI stores this securely via the `conf` package.
 
-If the user wants you to generate an image and you haven't set up the API key yet, you must first configure the CLI using a Gemini API Key. The CLI stores this securely via the `conf` package.
-
 ```bash
-# To set the Brandfetch API ID:
-npx -p blog-cover-image-cli blog-cover-cli config set-brandfetch-id <YOUR_BRANDFETCH_API_ID>
-
-# To set the key:
+# 1. Set your Gemini API Key (Required for image generation)
 npx -p blog-cover-image-cli blog-cover-cli config set-key <YOUR_GEMINI_API_KEY>
 
-# To verify it's set:
+# 2. Set your Brandfetch Client ID (Required to fetch high-res logos)
+npx -p blog-cover-image-cli blog-cover-cli config set-brandfetch-id <YOUR_BRANDFETCH_CLIENT_ID>
+
+# Check your keys (masked)
 npx -p blog-cover-image-cli blog-cover-cli config get-key
+npx -p blog-cover-image-cli blog-cover-cli config get-brandfetch-id
 ```
 
 ## Usage: Generating an Image

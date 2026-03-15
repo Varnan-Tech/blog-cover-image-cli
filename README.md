@@ -38,17 +38,15 @@ npm install -g blog-cover-image-cli
 The CLI securely stores your API key on your local machine using the `conf` package so you don't have to export it every time.
 
 ```bash
-# Set your Brandfetch API ID (Required for logos)
-blog-cover-cli config set-brandfetch-id <YOUR_BRANDFETCH_API_ID>
-
-# Set your Gemini API Key
+# 1. Set your Gemini API Key (Required for image generation)
 blog-cover-cli config set-key <YOUR_GEMINI_API_KEY>
 
-# Check your key (masked)
-blog-cover-cli config get-key
+# 2. Set your Brandfetch Client ID (Required to fetch high-res logos)
+blog-cover-cli config set-brandfetch-id <YOUR_BRANDFETCH_CLIENT_ID>
 
-# Delete your key
-blog-cover-cli config delete-key
+# Check your keys (masked)
+blog-cover-cli config get-key
+blog-cover-cli config get-brandfetch-id
 ```
 
 *If you run the generate command without a key, a secure, interactive prompt will ask you for it.*
