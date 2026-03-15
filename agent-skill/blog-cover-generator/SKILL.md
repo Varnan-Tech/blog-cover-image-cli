@@ -39,17 +39,22 @@ npx -p blog-cover-image-cli blog-cover-cli generate -t "The Title of the Blog Po
 
 ### Arguments
 - `-t, --title <text>`: **(Required)** The title text to display on the cover image. Do not use excessively long titles (keep it under 3 lines of text visually).
-- `-l, --logo <domain>`: **(Optional but recommended)** The domain to fetch the brand logo from (e.g., `vercel.com`, `google.com`, `anthropic.com`). The CLI automatically converts WebP/SVG/AVIF to PNG for compatibility.
+- `-l, --logo <domain>`: **(Optional but recommended)** The domain to fetch the brand logo from (e.g., `vercel.com`, `google.com`, `cursor.com`). The CLI automatically converts WebP/SVG/AVIF to PNG for compatibility.
 - `-o, --output <path>`: **(Optional)** The file path where the generated image will be saved. If omitted, the CLI automatically saves it to an `output/` directory in the current working folder (e.g., `./output/vercel-cover.png`).
 
 ### Examples
 
-**Example 1: Basic Generation**
+**Example 1: Cursor**
 ```bash
-npx -p blog-cover-image-cli blog-cover-cli generate -t "How Claude 3.7 is Redefining AI" -l "anthropic.com"
+npx -p blog-cover-image-cli blog-cover-cli generate -t "Why Cursor is the Ultimate AI Code Editor" -l "cursor.com"
 ```
 
-**Example 2: Custom Output Path**
+**Example 2: Lovable**
+```bash
+npx -p blog-cover-image-cli blog-cover-cli generate -t "Building Apps in Minutes with Lovable" -l "lovable.dev"
+```
+
+**Example 3: Custom Output Path**
 ```bash
 npx -p blog-cover-image-cli blog-cover-cli generate -t "Mastering React in 2026" -l "reactjs.org" -o "./assets/react-cover.png"
 ```

@@ -58,7 +58,14 @@ blog-cover-cli config get-brandfetch-id
 Generate a 16:9 cover image by providing a title and a domain name for the logo.
 
 ```bash
-blog-cover-cli generate -t "How Claude 3.7 is Redefining AI" -l "anthropic.com"
+# Example 1: Cursor
+blog-cover-cli generate -t "Why Cursor is the Ultimate AI Code Editor" -l "cursor.com"
+
+# Example 2: Lovable
+blog-cover-cli generate -t "Building Apps in Minutes with Lovable" -l "lovable.dev"
+
+# Example 3: X (Twitter)
+blog-cover-cli generate -t "The Future of Real-time Information" -l "x.com"
 ```
 
 ### Options
@@ -69,7 +76,7 @@ blog-cover-cli generate -t "How Claude 3.7 is Redefining AI" -l "anthropic.com"
 | `-l` | `--logo` | The domain to fetch the logo from (e.g. `google.com`) | No | |
 | `-o` | `--output` | The output path for the PNG file | No | `./output/<auto-name>.png` |
 
-If you omit the `--output` flag, the CLI automatically creates an `output/` directory in your current path and names the file intelligently based on the logo domain or title (e.g., `output/anthropic-cover.png`).
+If you omit the `--output` flag, the CLI automatically creates an `output/` directory in your current path and names the file intelligently based on the logo domain or title (e.g., `output/cursor-cover.png`).
 
 ---
 
