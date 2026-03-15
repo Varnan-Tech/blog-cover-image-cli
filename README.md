@@ -16,6 +16,8 @@ It handles everything from fetching company logos to pixel-perfect typography in
 - **Aesthetic Control**: Bundled with `examples/` that automatically guide the model to produce clean, white-background, heavy-typography styles.
 - **Google Search Grounding**: The image generation is hooked into Google Search to pull real-time data if your title involves current events.
 - **Agent Ready**: Includes an OpenCode `SKILL.md` so your favorite AI agents can use this CLI autonomously.
+- **Self-Healing AI Generator**: Automatically validates generated images using Gemini Pro Vision to detect typos or layout issues, retrying up to 3 times with corrective feedback.
+- **Automated Publishing**: Built-in CI/CD workflow for seamless NPM releases via GitHub Actions.
 
 ---
 
@@ -81,6 +83,30 @@ This package includes a structured OpenCode skill! Agents can install this packa
 1. Execute `npx -p blog-cover-image-cli blog-cover-cli config set-key $KEY`
 2. Execute `npx -p blog-cover-image-cli blog-cover-cli generate -t "Title" -l "domain.com"`
 3. Return the generated image to the user.
+
+---
+
+## Self-Healing AI Generator
+
+The CLI features a built-in Automated QA (Critic) loop to ensure high-quality results. 
+
+1. **Generation**: The tool generates an image based on your title and logo.
+2. **Validation**: It uses `gemini-3.1-pro-preview` to OCR the generated image and check for typos, layout issues, or missing elements.
+3. **Self-Correction**: If the validation fails, the CLI automatically retries (up to 3 times), passing the specific "critical feedback" back to the generator to fix the errors.
+
+This ensures that common AI image generation issues, like misspelled words in typography, are caught and corrected before you even see the file.
+
+---
+
+## Automated Publishing (CI/CD)
+
+This repository includes a GitHub Action workflow for automated NPM publishing. To set this up for your fork:
+
+1. **Generate Token**: Go to [npmjs.com](https://www.npmjs.com/), navigate to **Access Tokens**, and generate a new "Automation" token.
+2. **Add Secret**: In your GitHub repository, go to **Settings > Secrets and variables > Actions**.
+3. **Save Secret**: Create a new repository secret named `NPM_TOKEN` and paste your token.
+
+The workflow will automatically publish a new version to NPM whenever you create a new GitHub Release.
 
 ---
 

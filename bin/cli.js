@@ -10,6 +10,7 @@ import { writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { generateCoverImage } from '../src/geminiGenerator.js';
 import { fetchLogo } from '../src/logoFetcher.js';
+import { validateImage } from '../src/imageValidator.js';
 
 const config = new Conf({ projectName: 'blog-cover-image-cli' });
 const program = new Command();
@@ -160,7 +161,36 @@ program
       }
 
       console.log(chalk.blue('Generating image...'));
-      const { base64Image, textOutput } = await generateCoverImage(title, logoData, apiKey);
+      
+      const MAX_RETRIES = 3;
+      let attempt = 1;
+      let criticalFeedback = null;
+      let finalImage = null;
+      let finalOutput = null;
+      let validation = { isValid: false, issues: '' };
+
+      while (attempt <= MAX_RETRIES) {
+        const { base64Image, textOutput } = await generateCoverImage(title, logoData, apiKey, criticalFeedback);
+        
+        console.log(chalk.blue(`Validating image (Attempt ${attempt}/${MAX_RETRIES})...`));
+        validation = await validateImage(base64Image, title, !!logoData, apiKey);
+
+        finalImage = base64Image;
+        finalOutput = textOutput;
+
+        if (validation.isValid) {
+          break;
+        } else if (attempt < MAX_RETRIES) {
+          console.log(chalk.yellow(`QA Failed: ${validation.issues}. Regenerating (Attempt ${attempt + 1}/${MAX_RETRIES})...`));
+          criticalFeedback = validation.issues;
+        }
+        attempt++;
+      }
+
+      if (!validation.isValid) {
+        console.log(chalk.red(`\nWarning: QA failed after ${MAX_RETRIES} attempts. Saving the last generated image anyway.`));
+        console.log(chalk.yellow(`Final issues: ${validation.issues}`));
+      }
 
       if (!output) {
         // Smart default filename inside an "output" directory
@@ -173,13 +203,13 @@ program
       // Ensure directory exists
       await mkdir(path.dirname(output), { recursive: true });
 
-      const buffer = Buffer.from(base64Image, 'base64');
+      const buffer = Buffer.from(finalImage, 'base64');
       await writeFile(output, buffer);
 
       console.log(chalk.green(`\nSuccess! Image saved to: ${chalk.bold(output)}`));
-      if (textOutput.trim()) {
+      if (finalOutput.trim()) {
         console.log(chalk.gray('\nGemini Output:'));
-        console.log(textOutput);
+        console.log(finalOutput);
       }
     } catch (error) {
       console.error(chalk.red('\nError:'), error.message);

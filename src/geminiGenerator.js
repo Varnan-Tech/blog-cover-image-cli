@@ -36,13 +36,15 @@ async function getExampleImages() {
  * 
  * @param {string} title - The title text to include in the image.
  * @param {Object|null} logoData - Optional logo data { data: base64String, mimeType: 'image/png' }.
+ * @param {string} [apiKey] - Optional API key.
+ * @param {string} [criticalFeedback] - Optional feedback from a previous failed attempt.
  * @returns {Promise<{ base64Image: string, textOutput: string }>} - The base64 encoded image data and any text output.
  */
-export async function generateCoverImage(title, logoData, apiKey) {
+export async function generateCoverImage(title, logoData, apiKey, criticalFeedback) {
   const ai = new GoogleGenAI({ apiKey: apiKey || process.env.GEMINI_API_KEY });
   const exampleImages = await getExampleImages();
 
-  const textPrompt = `
+  let textPrompt = `
 You are an expert technical marketing designer creating a high-converting, minimalist 16:9 blog cover image. Strictly match the visual aesthetic of the provided example images.
 
 CANVAS & TYPOGRAPHY:
@@ -63,6 +65,10 @@ Carefully analyze the provided reference logo(s) and integrate them into the tex
 AESTHETIC TOUCHES:
 Keep the composition radically uncluttered. If relevant to the title's context, you may sparingly insert 1 or 2 small, contextual UI elements (like a subtle button, a cursor, or an emoji) to anchor the developer/tech aesthetic, but the primary focus must remain on the bold text and the logo.
 `;
+
+  if (criticalFeedback) {
+    textPrompt += `\nCRITICAL FEEDBACK FROM PREVIOUS ATTEMPT: ${criticalFeedback}. You MUST fix these errors in this new generation or you will be penalized.\n`;
+  }
 
   const parts = [];
 
