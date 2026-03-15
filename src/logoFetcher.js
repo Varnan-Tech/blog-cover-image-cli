@@ -19,17 +19,20 @@ export async function fetchLogo(logoInput, clientId) {
     let response;
     if (!logoInput.startsWith('http')) {
       response = await fetch(url);
-      if (!response.ok) {
-        // Fallback to icon.horse if Brandfetch fails
+      const contentType = response.headers.get('content-type');
+      if (!response.ok || !contentType?.includes('image')) {
+        // Fallback to icon.horse if Brandfetch fails or returns non-image
         const fallbackUrl = `https://icon.horse/icon/${logoInput}`;
         response = await fetch(fallbackUrl);
-        if (!response.ok) {
+        const fallbackContentType = response.headers.get('content-type');
+        if (!response.ok || !fallbackContentType?.includes('image')) {
           return null;
         }
       }
     } else {
       response = await fetch(url);
-      if (!response.ok) {
+      const contentType = response.headers.get('content-type');
+      if (!response.ok || !contentType?.includes('image')) {
         return null;
       }
     }
