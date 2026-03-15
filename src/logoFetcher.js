@@ -23,15 +23,34 @@ export async function fetchLogo(logoInput, clientId) {
   try {
     let response;
     if (!logoInput.startsWith('http')) {
-      response = await fetch(url, { headers });
+      try {
+        response = await fetch(url, { headers });
+      } catch (e) {
+        response = { ok: false, headers: new Headers() };
+      }
+
       const contentType = response.headers.get('content-type');
       if (!response.ok || !contentType?.includes('image')) {
-        // Fallback to icon.horse if Brandfetch fails or returns non-image
         const fallbackUrl = `https://icon.horse/icon/${logoInput}`;
-        response = await fetch(fallbackUrl, { headers });
+        try {
+          response = await fetch(fallbackUrl, { headers });
+        } catch (e) {
+          response = { ok: false, headers: new Headers() };
+        }
+
         const fallbackContentType = response.headers.get('content-type');
         if (!response.ok || !fallbackContentType?.includes('image')) {
-          return null;
+          const hunterUrl = `https://logos.hunter.io/${logoInput}`;
+          try {
+            response = await fetch(hunterUrl, { headers });
+          } catch (e) {
+            return null;
+          }
+
+          const hunterContentType = response.headers.get('content-type');
+          if (!response.ok || !hunterContentType?.includes('image')) {
+            return null;
+          }
         }
       }
     } else {
