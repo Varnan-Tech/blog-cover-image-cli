@@ -63,7 +63,7 @@ Carefully analyze the provided reference logo(s) and integrate them into the tex
 3. TYPOGRAPHIC REPLACEMENT: If an icon is geometrically similar to a letter in the brand name (like the letter 'O'), creatively substitute the letter with the icon.
 
 AESTHETIC TOUCHES:
-Keep the composition radically uncluttered. If relevant to the title's context, you may sparingly insert 1 or 2 small, contextual UI elements (like a subtle button, a cursor, or an emoji) to anchor the developer/tech aesthetic, but the primary focus must remain on the bold text and the logo. although it's not neccesary, but be careful adding it, it must not look redundant or bad.
+Keep the composition radically uncluttered. DO NOT add random, unrelated third-party logos or generic floating UI icons unless explicitly requested in the title. The composition MUST be incredibly clean. If you add a UI element, it must make perfect contextual sense. The primary focus must remain on the bold text and the specific requested logo.
 `;
 
   if (criticalFeedback) {

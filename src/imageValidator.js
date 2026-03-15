@@ -8,11 +8,12 @@ Analyze this blog cover image and verify if it meets the following CRITICAL requ
 1. TEXT ACCURACY: Does the image contain the exact text: "${title}"? It must be legible and spelled correctly.
 2. LOGO PRESENCE: ${hasLogo ? 'The image MUST contain the requested company logo.' : 'No specific logo was required.'}
 3. IMAGE INTEGRITY: Is the image clear and not obviously corrupted or garbled?
+4. UNWANTED ELEMENTS: Are there any redundant, misplaced, or entirely irrelevant third-party icons (like a random YouTube logo or a huge cursor) that don't fit the strict title context? (If yes, the image is INVALID).
 
 RELAXED RULES (DO NOT FAIL FOR THESE):
 - Colored text is ALLOWED and ENCOURAGED if it matches the brand.
 - Brand-colored logos are ALLOWED.
-- Small UI elements (like play buttons, icons, or decorative shapes) are ALLOWED and ENCOURAGED.
+- Minimalist, subtle UI elements are allowed ONLY if they perfectly match the specific requested context.
 - The background does NOT have to be pure white; subtle gradients or brand colors are acceptable.
 
 Return a JSON object with:
