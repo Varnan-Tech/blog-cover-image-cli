@@ -112,4 +112,4 @@ The workflow will automatically publish a new version to NPM whenever you create
 1. **Logo Fetcher**: Hits `Brandfetch`, parses WebP/SVGs/AVIFs, and converts to strict PNGs.
 2. **Context Assembly**: Loads aesthetic examples from the `./examples` folder to ground the style.
 3. **Multimodal Prompting**: Assembles the exact text instructions, the visual examples, and the fetched logo into a single unified payload.
-4. **Google GenAI SDK**: Sends the payload with `tools: [{ googleSearch: {} }]` to the Imagen 3 endpoint.
+4. **Google GenAI SDK**: Sends the payload with `tools: [{ googleSearch: {} }]` to the Gemini 3.1 Flash Image model.
