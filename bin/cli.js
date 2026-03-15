@@ -152,10 +152,7 @@ program
       console.log(chalk.blue('Fetching logo...'));
       let logoData = null;
       if (logo) {
-        let brandfetchId = null;
-        if (!logo.startsWith('http://') && !logo.startsWith('https://')) {
-          brandfetchId = await getBrandfetchId();
-        }
+        const brandfetchId = await getBrandfetchId();
         logoData = await fetchLogo(logo, brandfetchId);
         if (!logoData) {
           console.log(chalk.yellow(`Warning: Could not fetch logo for "${logo}". Proceeding without logo.`));
