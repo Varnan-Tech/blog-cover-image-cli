@@ -4,14 +4,19 @@ export async function validateImage(base64Image, title, hasLogo, apiKey) {
   const ai = new GoogleGenAI({ apiKey });
 
   const prompt = `
-Analyze this blog cover image and verify if it meets the following requirements:
-1. TEXT ACCURACY: Does the image contain the exact text: "${title}"?
-2. LOGO PRESENCE: ${hasLogo ? 'The image MUST contain a company logo.' : 'No specific logo was required.'}
-3. AESTHETIC: Is the background pure white? Is the typography bold, black, and minimalist?
-4. QUALITY: Are there any obvious AI artifacts, garbled text, or layout issues?
+Analyze this blog cover image and verify if it meets the following CRITICAL requirements:
+1. TEXT ACCURACY: Does the image contain the exact text: "${title}"? It must be legible and spelled correctly.
+2. LOGO PRESENCE: ${hasLogo ? 'The image MUST contain the requested company logo.' : 'No specific logo was required.'}
+3. IMAGE INTEGRITY: Is the image clear and not obviously corrupted or garbled?
+
+RELAXED RULES (DO NOT FAIL FOR THESE):
+- Colored text is ALLOWED and ENCOURAGED if it matches the brand.
+- Brand-colored logos are ALLOWED.
+- Small UI elements (like play buttons, icons, or decorative shapes) are ALLOWED and ENCOURAGED.
+- The background does NOT have to be pure white; subtle gradients or brand colors are acceptable.
 
 Return a JSON object with:
-- "isValid": boolean (true only if ALL requirements are met)
+- "isValid": boolean (true only if CRITICAL requirements are met)
 - "issues": string (empty if isValid is true, otherwise describe what is wrong)
 `;
 
