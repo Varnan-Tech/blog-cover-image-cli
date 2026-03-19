@@ -17,7 +17,7 @@ export async function fetchLogo(logoInput, clientId) {
     url = logoInput;
   } else {
     // Assume it's a domain, use Brandfetch API
-    url = `https://cdn.brandfetch.io/domain/${logoInput}/w/400/h/400/theme/dark/fallback/404/type/logo?c=${clientId}`;
+    url = `https://cdn.brandfetch.io/domain/${logoInput}/w/820/h/110/theme/dark/logo?c=${clientId}`;
   }
 
   try {
