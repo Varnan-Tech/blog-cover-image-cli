@@ -29,27 +29,31 @@ export async function fetchLogo(logoInput, clientId) {
         response = { ok: false, headers: new Headers() };
       }
 
-      const contentType = response.headers.get('content-type');
+      let contentType = response.headers.get('content-type');
       if (!response.ok || !contentType?.includes('image')) {
-        const fallbackUrl = `https://icon.horse/icon/${logoInput}`;
+        const hunterUrl = `https://logos.hunter.io/${logoInput}`;
         try {
-          response = await fetch(fallbackUrl, { headers });
+          response = await fetch(hunterUrl, { headers });
         } catch (e) {
           response = { ok: false, headers: new Headers() };
         }
 
-        const fallbackContentType = response.headers.get('content-type');
-        if (!response.ok || !fallbackContentType?.includes('image')) {
-          const hunterUrl = `https://logos.hunter.io/${logoInput}`;
+        contentType = response.headers.get('content-type');
+        if (!response.ok || !contentType?.includes('image')) {
+          const fallbackUrl = `https://icon.horse/icon/${logoInput}`;
           try {
-            response = await fetch(hunterUrl, { headers });
+            response = await fetch(fallbackUrl, { headers });
           } catch (e) {
             return null;
           }
 
-          const hunterContentType = response.headers.get('content-type');
-          if (!response.ok || !hunterContentType?.includes('image')) {
+          contentType = response.headers.get('content-type');
+          if (!response.ok || !contentType?.includes('image')) {
             return null;
+          }
+
+          if (contentType === 'image/x-icon' || contentType === 'image/vnd.microsoft.icon') {
+            throw new Error('Unsupported ICO format');
           }
         }
       }
