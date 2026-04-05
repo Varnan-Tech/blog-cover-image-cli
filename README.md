@@ -2,6 +2,10 @@
 
 A modern, AI-powered CLI tool designed to automatically generate high-converting, minimalist blog cover images and thumbnails using **Gemini 3.1 Flash Image Preview**. 
 
+
+<img width="1280" height="640" alt="blog-cover-image-cli-cover" src="https://github.com/user-attachments/assets/20336e16-a838-4281-9c48-af023fc84b4c" />
+
+
 It handles everything from fetching company logos to pixel-perfect typography integration, all from your terminal or directly via an AI Agent using the included OpenCode Skill.
 
 ![Banner](https://img.shields.io/badge/AI-Gemini%203.1-blue)
