@@ -14,6 +14,38 @@ It handles everything from fetching company logos to pixel-perfect typography in
 
 ---
 
+## Installation
+
+### Prerequisites
+
+You need [Node.js](https://nodejs.org/) installed. It comes with `npx` built in.
+
+### Option 1: npx (All Agents)
+
+```bash
+npx "@opendirectory.dev/skills" install blog-cover-image-cli --target claude
+```
+
+Supported `--target` values: `claude`, `gemini`, `codex`, `opencode`, `anti-gravity`, `openclaw`, `hermes`
+
+### Option 2: Native Plugin (Claude Code Only)
+
+Run these two commands inside your Claude Code terminal:
+
+```bash
+/plugin marketplace add Varnan-Tech/opendirectory
+/plugin install blog-cover-image-cli@opendirectory-marketplace
+```
+
+### Option 3: Claude Desktop App
+
+**Step 1: Download**
+Click **Code → Download ZIP** on this repo's GitHub page.
+
+**Step 2: Install**
+1. Open Claude Desktop > Customize > Skills > **+** > Upload a skill
+2. Drop the downloaded zip or extracted folder
+
 ## Features
 - **Full AI Generation**: Uses `gemini-3.1-flash-image-preview` to generate the entire image.
 - **Smart Logo Fetching**: Pass a domain (like `vercel.com`) and the CLI automatically fetches the logo using `Brandfetch`, normalizes it to PNG via `sharp`, and injects it into the AI context.
